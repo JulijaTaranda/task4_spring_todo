@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+</head>
+<body>
+<h1>Todo List</h1>
+<div>
+    <!-- Form for adding new todo -->
+    <form action="/add" method="post" th:object="${todo}">
+        <input type="text" th:field="*{title}" placeholder="Add new todo" />
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</div>
+        <button type="submit">Add</button>
+    </form>
+</div>
+<div>
+    <ul>
+        <!-- Loop to display todos -->
+        <li th:each="todo : ${todos}">
+            <span th:text="${todo.title}"></span>
+
+            <form action="/delete/{id}" th:action="@{/delete/{id}(id=${todo.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+
+            <form action="/update/{id}" th:action="@{/update/{id}(id=${todo.id})}" method="post">
+                <input type="checkbox" name="completed" th:checked="${todo.completed}" onChange="this.form.submit()"/>
+                <input type="hidden" name="title" th:value="${todo.title}"/>
+            </form>
+
+        </li>
+    </ul>
+</div>
+</body>
+</html>
